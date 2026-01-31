@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
@@ -11,6 +12,16 @@ const nextConfig = {
   },
   // Trailing slashes for SEO consistency
   trailingSlash: true,
+  // Permanent redirect from / to /vgc/reg-f/
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/vgc/reg-f/',
+        permanent: true, // 308 redirect
+      },
+    ];
+  },
 };
 
 export default nextConfig;

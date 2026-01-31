@@ -1,6 +1,7 @@
+// This page is no longer needed - redirect is handled in next.config.ts
+// Keeping as fallback for edge cases
 import { redirect } from 'next/navigation';
-import { CURRENT_FORMAT_ID } from '@/lib/constants';
 
 export default function Home() {
-  redirect(`/vgc/${CURRENT_FORMAT_ID}/`);
+  redirect('/vgc/reg-f/');
 }

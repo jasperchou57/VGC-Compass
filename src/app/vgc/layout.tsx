@@ -8,9 +8,9 @@ export default function VGCLayout({
 }) {
     return (
         <>
-            {/* Navigation */}
-            <nav className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
-                <div className="container mx-auto px-4">
+            {/* Single Header/Nav for all VGC pages */}
+            <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
+                <nav className="container mx-auto px-4">
                     <div className="flex items-center justify-between h-16">
                         <Link href={`/vgc/${CURRENT_FORMAT_ID}/`} className="text-xl font-bold text-white">
                             🧭 VGC Compass
@@ -27,12 +27,12 @@ export default function VGCLayout({
                             </Link>
                         </div>
                     </div>
-                </div>
-            </nav>
+                </nav>
+            </header>
 
             {children}
 
-            {/* Footer */}
+            {/* Single Footer for all VGC pages */}
             <footer className="bg-gray-900 border-t border-gray-800 py-8 mt-12">
                 <div className="container mx-auto px-4 text-center text-gray-400 text-sm">
                     <p className="mb-2">
