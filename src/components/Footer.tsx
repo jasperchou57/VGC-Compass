@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Footer() {
     return (
         <footer className="bg-gray-900 border-t border-gray-800 mt-12">
@@ -32,9 +34,18 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
-                    © {new Date().getFullYear()} VGC Compass.
-                    Built for the competitive Pokémon community.
+                <div className="border-t border-gray-800 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
+                    <div className="mb-4 md:mb-0">
+                        © {new Date().getFullYear()} VGC Compass. Built for the competitive Pokémon community.
+                    </div>
+
+                    {/* Compliance Links (P2-1) */}
+                    <div className="flex space-x-6">
+                        <Link href="/about" className="hover:text-blue-400 transition-colors">About</Link>
+                        <Link href="/contact" className="hover:text-blue-400 transition-colors">Contact</Link>
+                        <Link href="/privacy" className="hover:text-blue-400 transition-colors">Privacy</Link>
+                        <Link href="/terms" className="hover:text-blue-400 transition-colors">Terms</Link>
+                    </div>
                 </div>
             </div>
         </footer>
