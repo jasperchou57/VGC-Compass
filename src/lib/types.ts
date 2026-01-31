@@ -121,7 +121,7 @@ export interface Replay {
     replay_id: string;
     format_id: string;
     rating_estimate: number | null;
-    rating_source: 'official' | null;
+    rating_source: 'official' | 'estimated' | 'derived' | 'unknown' | null;
     played_at: Date | null;
     p1_team: string[];
     p2_team: string[];

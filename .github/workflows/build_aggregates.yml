@@ -1,0 +1,39 @@
+name: Build Aggregates
+
+on:
+  schedule:
+    # Run after replays fetch - at 01:00, 07:00, 13:00, 19:00 UTC
+    - cron: '0 1,7,13,19 * * *'
+  workflow_dispatch:
+
+jobs:
+  build-aggregates:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install psycopg2-binary
+      
+      - name: Build Pair Synergy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          FORMAT_ID: reg-f
+          MIN_RATING: '1760'
+        run: |
+          python scripts/build_pair_synergy.py
+      
+      - name: Build Counters
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          FORMAT_ID: reg-f
+          MIN_RATING: '1760'
+        run: |
+          python scripts/build_counters.py

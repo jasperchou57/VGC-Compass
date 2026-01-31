@@ -29,7 +29,8 @@ export default function ReplayList({ replays }: ReplayListProps) {
     if (replays.length === 0) {
         return (
             <div className="bg-gray-900 rounded-lg p-6 text-center text-gray-400">
-                <p>No replay evidence available yet.</p>
+                <p>当前暂无可用回放证据（会随数据抓取自动补齐）</p>
+                <p className="text-sm mt-2">No replay evidence available yet. Data updates automatically.</p>
             </div>
         );
     }
@@ -46,18 +47,27 @@ export default function ReplayList({ replays }: ReplayListProps) {
                 >
                     <div className="flex justify-between items-start mb-2">
                         <div className="flex items-center gap-3">
-                            {replay.rating_estimate && (
+                            {replay.rating_estimate ? (
                                 <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded">
                                     {replay.rating_estimate}
+                                </span>
+                            ) : (
+                                <span className="bg-gray-600 text-white text-xs px-2 py-1 rounded">
+                                    Unrated
                                 </span>
                             )}
                             {replay.rating_source === 'official' && (
                                 <span className="bg-green-600 text-white text-xs px-2 py-1 rounded">
-                                    Official Rating
+                                    Official
+                                </span>
+                            )}
+                            {replay.rating_source === 'derived' && (
+                                <span className="bg-yellow-600 text-white text-xs px-2 py-1 rounded">
+                                    Derived
                                 </span>
                             )}
                         </div>
-                        <span className="text-gray-400 text-sm">{formatDate(replay.played_at)}</span>
+                        <span className="text-blue-400 text-sm hover:underline">打开 Showdown 回放 →</span>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-4 text-sm">

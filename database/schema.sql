@@ -150,12 +150,22 @@ CREATE TABLE IF NOT EXISTS replays (
 
 COMMENT ON COLUMN replays.rating_source IS 'official: parsed from replay page. estimated: derived via rules. unknown: NULL.';
 
+-- Basic filters
 CREATE INDEX IF NOT EXISTS idx_replays_format ON replays(format_id);
 CREATE INDEX IF NOT EXISTS idx_replays_rating ON replays(rating_estimate DESC);
+
+-- Composite index for common query pattern (P4 per GPT)
+CREATE INDEX IF NOT EXISTS replays_format_rating_played_idx
+  ON replays (format_id, rating_estimate DESC, played_at DESC);
+
+-- JSONB containment queries (p1_team ? 'xxx')
 CREATE INDEX IF NOT EXISTS idx_replays_p1_team ON replays USING GIN (p1_team jsonb_path_ops);
 CREATE INDEX IF NOT EXISTS idx_replays_p2_team ON replays USING GIN (p2_team jsonb_path_ops);
 CREATE INDEX IF NOT EXISTS idx_replays_tags ON replays USING GIN (tags);
 CREATE INDEX IF NOT EXISTS idx_replays_cores ON replays USING GIN (featured_cores);
+
+-- Unique index on replay_id (P4 per GPT)
+CREATE UNIQUE INDEX IF NOT EXISTS replays_battle_id_uidx ON replays (replay_id);
 
 -- Additional composite indexes for fast lookups (GPT review requirement)
 CREATE INDEX IF NOT EXISTS idx_pair_synergy_lookup ON pair_synergy(format_id, time_bucket, pokemon_a, pokemon_b);

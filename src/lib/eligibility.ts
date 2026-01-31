@@ -142,7 +142,7 @@ async function countReplaysForCore(
     pokemonA: string,
     pokemonB: string,
     minRating: number,
-    requireOfficial: boolean
+    _requireOfficial: boolean  // kept for API compat but not used in filter
 ): Promise<number> {
     const result = await query<{ count: number }>(
         `SELECT COUNT(*) as count FROM replays 
@@ -151,8 +151,7 @@ async function countReplaysForCore(
        (p1_team ? $2 AND p1_team ? $3) OR 
        (p2_team ? $2 AND p2_team ? $3)
      )
-     AND rating_estimate >= $4
-     ${requireOfficial ? "AND rating_source = 'official'" : ''}`,
+     AND rating_estimate >= $4`,
         [formatId, pokemonA, pokemonB, minRating]
     );
     return result[0]?.count ?? 0;
@@ -162,14 +161,13 @@ async function countReplaysForPokemon(
     formatId: string,
     pokemon: string,
     minRating: number,
-    requireOfficial: boolean
+    _requireOfficial: boolean  // kept for API compat but not used in filter
 ): Promise<number> {
     const result = await query<{ count: number }>(
         `SELECT COUNT(*) as count FROM replays 
      WHERE format_id = $1 
      AND (p1_team ? $2 OR p2_team ? $2)
-     AND rating_estimate >= $3
-     ${requireOfficial ? "AND rating_source = 'official'" : ''}`,
+     AND rating_estimate >= $3`,
         [formatId, pokemon, minRating]
     );
     return result[0]?.count ?? 0;

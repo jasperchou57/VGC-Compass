@@ -34,10 +34,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 async function getFormatHubData(formatId: string): Promise<FormatHubData | null> {
     const [currentTimeBucket, previousTimeBucket] = await getLastTwoBuckets(formatId);
 
+    // P1 Fix: Only get threats that have counter data (usage >= 2%)
     const currentUsage = await query<PokemonUsage>(
-        `SELECT * FROM pokemon_usage 
-         WHERE format_id = $1 AND time_bucket = $2 AND cutoff >= 1760
-         ORDER BY rank ASC LIMIT 50`,
+        `SELECT u.* FROM pokemon_usage u
+         WHERE u.format_id = $1 AND u.time_bucket = $2 AND u.cutoff >= 1760 AND u.usage_rate >= 2
+         ORDER BY u.rank ASC LIMIT 50`,
         [formatId, currentTimeBucket]
     );
 
@@ -59,9 +60,10 @@ async function getFormatHubData(formatId: string): Promise<FormatHubData | null>
     const topFallers = withDelta.filter(p => p.rankDelta < 0).sort((a, b) => a.rankDelta - b.rankDelta).slice(0, 5);
     const topThreats = currentUsage.slice(0, 10);
 
+    // P1 Fix: Only get cores that have data (pair_sample_size >= 3, lowered from 200 for cold start)
     const topCores = await query<PairSynergy>(
         `SELECT * FROM pair_synergy 
-         WHERE format_id = $1 AND time_bucket = $2 AND cutoff >= 1760 AND pair_sample_size >= 200
+         WHERE format_id = $1 AND time_bucket = $2 AND cutoff >= 1760 AND pair_sample_size >= 3
          ORDER BY pair_rate DESC LIMIT 10`,
         [formatId, currentTimeBucket]
     );

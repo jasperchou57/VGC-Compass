@@ -90,9 +90,12 @@ async function getCorePageData(formatId: string, pokemonA: string, pokemonB: str
             `SELECT * FROM replays 
              WHERE format_id = $1 
              AND ((p1_team ? $2 AND p1_team ? $3) OR (p2_team ? $2 AND p2_team ? $3))
-             AND rating_estimate >= 1760
-             AND rating_source = 'official'
-             ORDER BY rating_estimate DESC
+             AND ((rating_estimate >= 1760) OR rating_estimate IS NULL)
+             ORDER BY
+               (rating_source = 'official') DESC,
+               (rating_source = 'derived') DESC,
+               rating_estimate DESC NULLS LAST,
+               played_at DESC
              LIMIT 10`,
             [formatId, pokemonA, pokemonB]
         ),
