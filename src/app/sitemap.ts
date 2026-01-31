@@ -67,8 +67,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
         // Eligible Counter pages
         const eligibleThreats = await query<PokemonUsage>(
-            `SELECT pokemon FROM pokemon_usage 
-       WHERE format_id = $1 AND time_bucket = $2 AND cutoff >= 1760 AND usage_rate >= $3`,
+            `SELECT u.pokemon FROM pokemon_usage u
+             WHERE u.format_id = $1 AND u.time_bucket = $2 AND u.cutoff >= 1760 AND u.usage_rate >= $3
+             AND EXISTS (
+                 SELECT 1 FROM counters c 
+                 WHERE c.format_id = u.format_id 
+                 AND c.time_bucket = u.time_bucket 
+                 AND c.target_pokemon = u.pokemon
+             )`,
             [CURRENT_FORMAT_ID, timeBucket, COUNTER_MIN_USAGE_RATE]
         );
 

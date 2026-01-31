@@ -40,10 +40,17 @@ function formatPokemonName(slug: string): string {
 async function getCountersData(formatId: string) {
     const timeBucket = await getLatestTimeBucket(formatId);
 
+    // P0-2 Fix: Only show threats that have actual counter data (prevent 404s)
     const threats = await query<PokemonUsage>(
-        `SELECT * FROM pokemon_usage 
-         WHERE format_id = $1 AND time_bucket = $2 AND cutoff >= 1760 AND usage_rate >= $3
-         ORDER BY usage_rate DESC LIMIT 30`,
+        `SELECT u.* FROM pokemon_usage u
+         WHERE u.format_id = $1 AND u.time_bucket = $2 AND u.cutoff >= 1760 AND u.usage_rate >= $3
+         AND EXISTS (
+             SELECT 1 FROM counters c 
+             WHERE c.format_id = u.format_id 
+             AND c.time_bucket = u.time_bucket 
+             AND c.target_pokemon = u.pokemon
+         )
+         ORDER BY u.usage_rate DESC LIMIT 30`,
         [formatId, timeBucket, COUNTER_MIN_USAGE_RATE]
     );
 
