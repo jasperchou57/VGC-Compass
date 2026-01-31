@@ -27,8 +27,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const formatName = getFormatName(format_id);
 
     return {
-        // SEO Template: Counter Guides – VGC {FormatName} | VGC Meta Compass
-        title: `Counter Guides – VGC ${formatName} | VGC Meta Compass`,
+        // SEO Template: Counter Guides – VGC {FormatName} | VGC Compass
+        title: `Counter Guides – VGC ${formatName} | VGC Compass`,
         description: `How to beat the most common threats in VGC ${formatName}, backed by usage stats and replay evidence.`,
     };
 }

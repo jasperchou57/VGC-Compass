@@ -9,7 +9,7 @@ export default function Navigation() {
                     {/* Logo */}
                     <Link href={`/vgc/${CURRENT_FORMAT_ID}/`} className="flex items-center space-x-2">
                         <span className="text-2xl">🧭</span>
-                        <span className="font-bold text-lg">VGC Meta Compass</span>
+                        <span className="font-bold text-lg">VGC Compass</span>
                     </Link>
 
                     {/* Nav Links */}

@@ -25,8 +25,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const formatName = getFormatName(format_id);
 
     return {
-        // SEO Template: Team Archetypes in VGC {FormatName} | VGC Meta Compass
-        title: `Team Archetypes in VGC ${formatName} | VGC Meta Compass`,
+        // SEO Template: Team Archetypes in VGC {FormatName} | VGC Compass
+        title: `Team Archetypes in VGC ${formatName} | VGC Compass`,
         description: `Explore common team archetypes in VGC ${formatName} with key cores, sample teams, and replay evidence.`,
     };
 }

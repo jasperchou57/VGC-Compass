@@ -37,8 +37,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const formatName = getFormatName(format_id);
 
     return {
-        // SEO Template: {ArchetypeName} Teams – VGC {FormatName} | VGC Meta Compass
-        title: `${data.name} Teams – VGC ${formatName} | VGC Meta Compass`,
+        // SEO Template: {ArchetypeName} Teams – VGC {FormatName} | VGC Compass
+        title: `${data.name} Teams – VGC ${formatName} | VGC Compass`,
         description: `What defines ${data.name} in VGC ${formatName}: key Pokémon, common cores, weaknesses, sample teams to copy, and replay evidence.`,
     };
 }

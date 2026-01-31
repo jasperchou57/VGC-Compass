@@ -25,8 +25,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const formatName = getFormatName(format_id);
 
     return {
-        // SEO Template: VGC {FormatName} Meta Guide (1760+) – Threats, Cores & Counters | VGC Meta Compass
-        title: `VGC ${formatName} Meta Guide (1760+) – Threats, Cores & Counters | VGC Meta Compass`,
+        // SEO Template: VGC {FormatName} Meta Guide (1760+) – Threats, Cores & Counters | VGC Compass
+        title: `VGC ${formatName} Meta Guide (1760+) – Threats, Cores & Counters | VGC Compass`,
         description: `Current VGC ${formatName} meta hub: top threats by usage, best cores, counter guides, archetypes, and high-rated replay evidence. Updated monthly.`,
     };
 }

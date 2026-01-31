@@ -1,5 +1,5 @@
 // ============================================================
-// Type Definitions for VGC Meta Compass
+// Type Definitions for VGC Compass
 // ============================================================
 
 // Database Types

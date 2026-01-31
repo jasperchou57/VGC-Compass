@@ -27,8 +27,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const formatName = getFormatName(format_id);
 
     return {
-        // SEO Template: Top Cores in VGC {FormatName} (1760+) | VGC Meta Compass
-        title: `Top Cores in VGC ${formatName} (1760+) | VGC Meta Compass`,
+        // SEO Template: Top Cores in VGC {FormatName} (1760+) | VGC Compass
+        title: `Top Cores in VGC ${formatName} (1760+) | VGC Compass`,
         description: `Browse the most common VGC ${formatName} cores based on 1760+ usage, with partners, sample teams, and replay evidence.`,
     };
 }

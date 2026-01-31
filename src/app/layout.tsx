@@ -11,16 +11,16 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | VGC Meta Compass',
-    default: 'VGC Meta Compass - Competitive Pokémon VGC Analysis',
+    template: '%s | VGC Compass',
+    default: 'VGC Compass - Competitive Pokémon VGC Analysis',
   },
   description: 'VGC decision engine with counter guides, core analysis, team archetypes, and replay evidence. Get actionable strategies for VGC 2026 Regulation F.',
   keywords: ['VGC', 'Pokemon', 'competitive', 'meta', 'counter', 'team builder', 'Reg F', 'Regulation F'],
-  authors: [{ name: 'VGC Meta Compass' }],
+  authors: [{ name: 'VGC Compass' }],
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'VGC Meta Compass',
+    siteName: 'VGC Compass',
   },
   robots: {
     index: true,

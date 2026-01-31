@@ -1,4 +1,4 @@
-# VGC Meta Compass
+# VGC Compass
 
 > VGC decision engine with counter guides, core analysis, team archetypes, and replay evidence.
 

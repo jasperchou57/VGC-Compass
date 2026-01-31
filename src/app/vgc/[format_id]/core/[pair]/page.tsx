@@ -46,8 +46,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const formatName = getFormatName(format_id);
 
     return {
-        // SEO Template: {A} + {B} Core Guide – VGC {FormatName} (1760+) | VGC Meta Compass
-        title: `${nameA} + ${nameB} Core Guide – VGC ${formatName} (1760+) | VGC Meta Compass`,
+        // SEO Template: {A} + {B} Core Guide – VGC {FormatName} (1760+) | VGC Compass
+        title: `${nameA} + ${nameB} Core Guide – VGC ${formatName} (1760+) | VGC Compass`,
         description: `Why ${nameA}+${nameB} works in VGC ${formatName}: pair rate, best third partners, sample teams to copy, and high-rated replay evidence.`,
     };
 }

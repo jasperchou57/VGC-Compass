@@ -5,7 +5,7 @@ export default function Footer() {
                 <div className="grid md:grid-cols-3 gap-8">
                     {/* About */}
                     <div>
-                        <h3 className="font-bold text-lg mb-4">🧭 VGC Meta Compass</h3>
+                        <h3 className="font-bold text-lg mb-4">🧭 VGC Compass</h3>
                         <p className="text-gray-400 text-sm">
                             Data-driven insights for competitive VGC players.
                             All statistics derived from high-rating ladder and tournament replays.
@@ -33,7 +33,7 @@ export default function Footer() {
                 </div>
 
                 <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
-                    © {new Date().getFullYear()} VGC Meta Compass.
+                    © {new Date().getFullYear()} VGC Compass.
                     Built for the competitive Pokémon community.
                 </div>
             </div>
