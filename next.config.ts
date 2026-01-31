@@ -12,13 +12,12 @@ const nextConfig: NextConfig = {
   },
   // Trailing slashes for SEO consistency
   trailingSlash: true,
-  // Permanent redirect from / to /vgc/reg-f/
-  async redirects() {
+  // Rewrite / to show /vgc/reg-f/ content without changing URL
+  async rewrites() {
     return [
       {
         source: '/',
         destination: '/vgc/reg-f/',
-        permanent: true, // 308 redirect
       },
     ];
   },
