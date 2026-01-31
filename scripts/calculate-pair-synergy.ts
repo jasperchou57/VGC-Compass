@@ -16,7 +16,7 @@ async function calculatePairSynergy() {
     });
 
     try {
-        const timeBucket = new Date().toISOString().slice(0, 7);
+        const timeBucket = '2025-12'; // Match imported Smogon data
 
         console.log(`Calculating pair synergy for ${FORMAT_ID} / ${timeBucket}`);
 

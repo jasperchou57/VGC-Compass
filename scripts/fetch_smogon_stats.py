@@ -27,9 +27,9 @@ SMOGON_STATS_BASE = "https://www.smogon.com/stats"
 
 # Format mapping: our format_id -> Smogon format name
 FORMAT_MAP = {
-    "reg-f": "gen9vgc2024regf",
-    "reg-g": "gen9vgc2024regg",
-    "reg-h": "gen9vgc2024regh",
+    "reg-f": "gen9vgc2026regf",
+    "reg-g": "gen9vgc2025regg",
+    "reg-h": "gen9vgc2025regh",
 }
 
 def get_db_connection():
@@ -54,11 +54,11 @@ def parse_usage_file(content: str) -> list[dict]:
     pokemon_data = []
     lines = content.strip().split("\n")
     
-    # Skip header lines (first 5 lines typically)
-    data_lines = [l for l in lines if re.match(r"^\s*\d+\s*\|", l)]
-    
-    for line in data_lines:
-        # Format: " | 1 | Pokemon Name | 45.123% | ... |"
+    # Skip header lines - data lines start with | and a number
+    for line in lines:
+        # Format: " | 1    | Flutter Mane       | 49.73725% | ... |"
+        if not line.strip().startswith("|"):
+            continue
         parts = [p.strip() for p in line.split("|") if p.strip()]
         if len(parts) >= 3:
             try:

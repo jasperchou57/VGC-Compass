@@ -29,9 +29,9 @@ SHOWDOWN_REPLAY_BASE = "https://replay.pokemonshowdown.com"
 
 # Format mapping
 FORMAT_MAP = {
-    "reg-f": "gen9vgc2024regf",
-    "reg-g": "gen9vgc2024regg",
-    "reg-h": "gen9vgc2024regh",
+    "reg-f": "gen9vgc2026regf",
+    "reg-g": "gen9vgc2025regg",
+    "reg-h": "gen9vgc2025regh",
 }
 
 def get_db_connection():
