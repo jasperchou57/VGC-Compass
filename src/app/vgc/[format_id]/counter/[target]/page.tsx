@@ -39,6 +39,40 @@ function formatPokemonName(slug: string): string {
     return slug.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function parseSmogonData(data: any): { name: string; usage: number }[] {
+    if (!data) return [];
+    // Handle new Smogon format: {_v: 1, data: [{key: "...", pct: ...}]}
+    if (data._v && Array.isArray(data.data)) {
+        return data.data.map((item: { key: string; pct: number }) => ({
+            name: item.key.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, s => s.toUpperCase()),
+            usage: item.pct,
+        }));
+    }
+    // Handle old format: [{name: "...", usage: ...}]
+    if (Array.isArray(data)) {
+        return data;
+    }
+    return [];
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function parseTeraData(data: any): { type: string; usage: number }[] {
+    if (!data) return [];
+    // Handle new Smogon format: {_v: 1, data: [{key: "...", pct: ...}]}
+    if (data._v && Array.isArray(data.data)) {
+        return data.data.map((item: { key: string; pct: number }) => ({
+            type: item.key.replace(/^./, s => s.toUpperCase()),
+            usage: item.pct,
+        }));
+    }
+    // Handle old format: [{type: "...", usage: ...}]
+    if (Array.isArray(data)) {
+        return data;
+    }
+    return [];
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { format_id, target } = await params;
     const targetSlug = extractTargetSlug(target);
@@ -224,7 +258,7 @@ export default async function CounterPage({ params }: PageProps) {
                         <div>
                             <h3 className="text-sm text-gray-400 mb-2">Common Moves</h3>
                             <ul className="space-y-1">
-                                {data.usage.top_moves?.slice(0, 4).map(move => (
+                                {parseSmogonData(data.usage.top_moves).slice(0, 4).map(move => (
                                     <li key={move.name} className="flex justify-between">
                                         <span>{move.name}</span>
                                         <span className="text-gray-400">{move.usage}%</span>
@@ -235,7 +269,7 @@ export default async function CounterPage({ params }: PageProps) {
                         <div>
                             <h3 className="text-sm text-gray-400 mb-2">Common Items</h3>
                             <ul className="space-y-1">
-                                {data.usage.top_items?.slice(0, 4).map(item => (
+                                {parseSmogonData(data.usage.top_items).slice(0, 4).map(item => (
                                     <li key={item.name} className="flex justify-between">
                                         <span>{item.name}</span>
                                         <span className="text-gray-400">{item.usage}%</span>
@@ -246,7 +280,7 @@ export default async function CounterPage({ params }: PageProps) {
                         <div>
                             <h3 className="text-sm text-gray-400 mb-2">Common Abilities</h3>
                             <ul className="space-y-1">
-                                {data.usage.top_abilities?.slice(0, 4).map(ability => (
+                                {parseSmogonData(data.usage.top_abilities).slice(0, 4).map(ability => (
                                     <li key={ability.name} className="flex justify-between">
                                         <span>{ability.name}</span>
                                         <span className="text-gray-400">{ability.usage}%</span>
@@ -257,7 +291,7 @@ export default async function CounterPage({ params }: PageProps) {
                         <div>
                             <h3 className="text-sm text-gray-400 mb-2">Tera Types</h3>
                             <ul className="space-y-1">
-                                {data.usage.top_tera?.slice(0, 4).map(tera => (
+                                {parseTeraData(data.usage.top_tera).slice(0, 4).map(tera => (
                                     <li key={tera.type} className="flex justify-between">
                                         <span>{tera.type}</span>
                                         <span className="text-gray-400">{tera.usage}%</span>

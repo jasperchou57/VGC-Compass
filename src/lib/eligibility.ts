@@ -80,8 +80,8 @@ export async function checkCounterEligibility(
     }
 
     // Check Gate B: Win/Loss sample sizes
-    const counterStats = await query<{ total_wins: number; total_losses: number }>(
-        `SELECT SUM(n_wins) as total_wins, SUM(n_losses) as total_losses 
+    const counterStats = await query<{ total_wins: number; total_losses: number; counter_count: number }>(
+        `SELECT SUM(n_wins) as total_wins, SUM(n_losses) as total_losses, COUNT(*) as counter_count 
      FROM counters 
      WHERE format_id = $1 AND time_bucket = $2 AND target_pokemon = $3`,
         [formatId, timeBucket, targetPokemon]
@@ -91,6 +91,8 @@ export async function checkCounterEligibility(
         counterStats.length > 0 &&
         counterStats[0].total_wins >= COUNTER_MIN_WINS &&
         counterStats[0].total_losses >= COUNTER_MIN_LOSSES;
+
+    const hasCounterData = counterStats.length > 0 && counterStats[0].counter_count > 0;
 
     // Check Gate C: Replays
     const officialReplays = await countReplaysForPokemon(formatId, targetPokemon, REPLAY_SSR_CUTOFF, true);
@@ -105,6 +107,14 @@ export async function checkCounterEligibility(
         return {
             status: 'degraded',
             reason: hasEnoughSamples ? 'Limited high-rated samples' : 'Insufficient win/loss samples'
+        };
+    }
+
+    // NEW: If we have counter data from Smogon stats but no replays, still show degraded
+    if (hasCounterData) {
+        return {
+            status: 'degraded',
+            reason: 'Counter data from usage stats (no replays)'
         };
     }
 
