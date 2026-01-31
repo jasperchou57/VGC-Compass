@@ -12,15 +12,6 @@ const nextConfig: NextConfig = {
   },
   // Trailing slashes for SEO consistency
   trailingSlash: true,
-  // Rewrite / to show /vgc/reg-f/ content without changing URL
-  async rewrites() {
-    return [
-      {
-        source: '/',
-        destination: '/vgc/reg-f/',
-      },
-    ];
-  },
 };
 
 export default nextConfig;
