@@ -35,21 +35,27 @@ export class DatabaseUnavailableError extends Error {
 // Helper function to query the database
 export async function query<T>(text: string, params?: unknown[]): Promise<T[]> {
   if (!pool) {
-    // P0-3 Fix: In production, throw error instead of returning empty array
-    // This prevents false 404s when DB is not connected
+    // Log this as a warning - in production this is critical but we don't want to crash pages
     if (process.env.NODE_ENV === 'production') {
-      throw new DatabaseUnavailableError('DATABASE_URL not configured in production');
+      console.error('[CRITICAL] DATABASE_URL not configured in production - pages will show demo data');
+    } else {
+      console.warn('Database not configured. Set a valid DATABASE_URL in .env.local');
     }
-    console.warn('Database not configured. Set a valid DATABASE_URL in .env.local');
     return [];
   }
 
-  const client = await pool.connect();
   try {
-    const result = await client.query(text, params);
-    return result.rows as T[];
-  } finally {
-    client.release();
+    const client = await pool.connect();
+    try {
+      const result = await client.query(text, params);
+      return result.rows as T[];
+    } finally {
+      client.release();
+    }
+  } catch (error) {
+    console.error('[DB Query Error]', error);
+    // Return empty array on query error to prevent page crashes
+    return [];
   }
 }
 
