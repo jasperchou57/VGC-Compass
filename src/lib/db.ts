@@ -24,9 +24,22 @@ const pool = isValidDatabaseUrl(process.env.DATABASE_URL)
   })
   : null;
 
+// Custom error class for database unavailability
+export class DatabaseUnavailableError extends Error {
+  constructor(message: string = 'Database connection unavailable') {
+    super(message);
+    this.name = 'DatabaseUnavailableError';
+  }
+}
+
 // Helper function to query the database
 export async function query<T>(text: string, params?: unknown[]): Promise<T[]> {
   if (!pool) {
+    // P0-3 Fix: In production, throw error instead of returning empty array
+    // This prevents false 404s when DB is not connected
+    if (process.env.NODE_ENV === 'production') {
+      throw new DatabaseUnavailableError('DATABASE_URL not configured in production');
+    }
     console.warn('Database not configured. Set a valid DATABASE_URL in .env.local');
     return [];
   }

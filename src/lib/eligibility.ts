@@ -54,7 +54,9 @@ export async function checkCoreEligibility(
         return { status: 'degraded', reason: 'Limited high-rated samples' };
     }
 
-    return { status: '404', reason: 'Insufficient replay evidence' };
+    // P1-2 Fix: If we have pair data from usage stats but no replays, still show degraded
+    // This prevents false 404s during cold start when replay table is empty
+    return { status: 'degraded', reason: 'Pair data from usage stats (no replays)' };
 }
 
 /**
@@ -179,18 +181,4 @@ async function countReplaysForPokemon(
 export function getCanonicalPairSlug(a: string, b: string): string {
     const sorted = [a, b].sort();
     return `${sorted[0]}-${sorted[1]}`;
-}
-
-/**
- * Parse pair slug back to individual pokemon
- */
-export function parsePairSlug(slug: string): [string, string] | null {
-    // This needs to handle multi-word pokemon names like "urshifu-rapid-strike"
-    // We'll need to look up valid pokemon to properly split
-    const parts = slug.split('-');
-    if (parts.length < 2) return null;
-
-    // For now, simple split at middle - proper implementation needs pokemon lookup
-    // This is a placeholder that will be enhanced when we have the pokemon_dim data
-    return [parts[0], parts.slice(1).join('-')] as [string, string];
 }

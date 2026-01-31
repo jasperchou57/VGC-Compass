@@ -40,9 +40,12 @@ function formatPokemonName(slug: string): string {
 async function getCoresData(formatId: string) {
     const timeBucket = await getLatestTimeBucket(formatId);
 
+    // P0-1 Fix: Simply filter by pair_sample_size
+    // Eligibility logic (P1-2) now returns 'degraded' when no replays exist
+    // so these pages won't 404
     const cores = await query<PairSynergy>(
         `SELECT * FROM pair_synergy 
-         WHERE format_id = $1 AND time_bucket = $2 AND cutoff >= 1760 AND pair_sample_size >= $3
+         WHERE format_id = $1 AND time_bucket = $2 AND pair_sample_size >= $3
          ORDER BY pair_rate DESC LIMIT 50`,
         [formatId, timeBucket, CORE_MIN_SAMPLE_SIZE]
     );
@@ -51,7 +54,7 @@ async function getCoresData(formatId: string) {
         return { cores, isDemo: false };
     }
 
-    // Demo data
+    // Demo data - only show when no real data available
     return {
         cores: [
             { pokemon_a: 'incineroar', pokemon_b: 'rillaboom', pair_rate: 45.2, pair_sample_size: 1250 },
@@ -59,11 +62,6 @@ async function getCoresData(formatId: string) {
             { pokemon_a: 'pelipper', pokemon_b: 'urshifu-rapid-strike', pair_rate: 35.0, pair_sample_size: 820 },
             { pokemon_a: 'chien-pao', pokemon_b: 'flutter-mane', pair_rate: 32.1, pair_sample_size: 750 },
             { pokemon_a: 'iron-hands', pokemon_b: 'tornadus', pair_rate: 28.9, pair_sample_size: 680 },
-            { pokemon_a: 'amoonguss', pokemon_b: 'incineroar', pair_rate: 27.5, pair_sample_size: 650 },
-            { pokemon_a: 'landorus-therian', pokemon_b: 'rillaboom', pair_rate: 25.3, pair_sample_size: 600 },
-            { pokemon_a: 'incineroar', pokemon_b: 'urshifu-rapid-strike', pair_rate: 24.1, pair_sample_size: 580 },
-            { pokemon_a: 'flutter-mane', pokemon_b: 'tornadus', pair_rate: 22.8, pair_sample_size: 550 },
-            { pokemon_a: 'chien-pao', pokemon_b: 'landorus-therian', pair_rate: 21.5, pair_sample_size: 520 },
         ] as PairSynergy[],
         isDemo: true,
     };
