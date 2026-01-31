@@ -1,0 +1,2 @@
+# Python dependencies for data pipeline scripts
+psycopg2-binary>=2.9.9

@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VGC Meta Compass
 
-## Getting Started
+> VGC decision engine with counter guides, core analysis, team archetypes, and replay evidence.
 
-First, run the development server:
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Start dev server (demo mode)
+npm run dev
+```
+
+Visit http://localhost:3000
+
+## 📦 Full Setup (with Database)
+
+### 1. Create Supabase Project
+
+1. Go to [supabase.com](https://supabase.com) and create a new project
+2. Copy the connection string from Settings → Database → Connection string (URI)
+
+### 2. One-Click Setup
+
+```bash
+# Set your database URL
+export DATABASE_URL="postgresql://postgres:PASSWORD@db.PROJECT.supabase.co:5432/postgres"
+
+# Run setup (creates tables + fetches initial data)
+./scripts/setup.sh
+```
+
+### 3. Configure Environment
+
+```bash
+cp .env.example .env.local
+# Edit .env.local with your values
+```
+
+### 4. Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Format Hub** - Top risers, fallers, threats, and cores
+- **Core Guides** - Analyze Pokémon pairings with synergy data
+- **Counter Guides** - How to beat top threats with effectiveness scores
+- **Archetype Guides** - Rain, Sun, Trick Room, Tailwind, Balance teams
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+vgc-meta-compass/
+├── src/
+│   ├── app/                 # Next.js App Router pages
+│   │   └── vgc/[format_id]/ # Dynamic routes
+│   ├── components/          # React components
+│   └── lib/                 # Utilities and types
+├── database/                # SQL schema
+├── scripts/                 # Data pipeline scripts
+│   ├── fetch_smogon_stats.py    # Python: Smogon usage data
+│   ├── fetch_replays.py         # Python: Showdown replays
+│   ├── calculate-pair-synergy.ts # TS: Core calculations
+│   ├── calculate-counters.ts     # TS: Counter calculations
+│   └── setup.sh                  # One-click setup
+├── .github/workflows/       # GitHub Actions
+│   └── data-pipeline.yml    # Scheduled data updates
+└── public/                  # Static assets
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Environment Variables
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `DATABASE_URL` | Yes | PostgreSQL connection string |
+| `NEXT_PUBLIC_SITE_URL` | Yes | Production domain for SEO |
+| `OPENAI_API_KEY` | No | For AI summary features |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Data Pipeline
 
-## Deploy on Vercel
+### Manual Run
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+./scripts/run-pipeline.sh
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Scheduled (GitHub Actions)
+
+- **Smogon Stats**: 3rd of each month
+- **Replays**: Weekly on Sundays
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Styling**: Tailwind CSS
+- **Database**: PostgreSQL / Supabase
+- **Deployment**: Vercel
+
+## Data Sources
+
+- Pokémon Showdown Usage Stats (1760+ cutoff)
+- Official Tournament Replays (Rating ≥1700)
+
+## License
+
+MIT

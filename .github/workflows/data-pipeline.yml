@@ -1,0 +1,112 @@
+name: Data Pipeline
+
+on:
+  schedule:
+    # Run Smogon stats on 3rd of each month at 10:00 UTC (after data is usually available)
+    - cron: '0 10 3 * *'
+    # Run replays weekly on Sundays at 02:00 UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+    inputs:
+      task:
+        description: 'Task to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - smogon
+          - replays
+
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  fetch-smogon-stats:
+    name: Fetch Smogon Stats
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 10 3 * *' || github.event.inputs.task == 'all' || github.event.inputs.task == 'smogon'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install dependencies
+        run: |
+          pip install psycopg2-binary
+      
+      - name: Fetch Smogon stats
+        run: |
+          cd scripts
+          python fetch_smogon_stats.py --format reg-f --cutoff 1760
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::Smogon stats fetch failed"
+
+  fetch-replays:
+    name: Fetch Replays
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 2 * * 0' || github.event.inputs.task == 'all' || github.event.inputs.task == 'replays'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install dependencies
+        run: |
+          pip install psycopg2-binary
+      
+      - name: Fetch replays
+        run: |
+          cd scripts
+          python fetch_replays.py --format reg-f --min-rating 1700 --limit 500
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::Replay fetch failed"
+
+  calculate-derived-data:
+    name: Calculate Derived Data
+    runs-on: ubuntu-latest
+    needs: [fetch-smogon-stats, fetch-replays]
+    if: always() && (needs.fetch-smogon-stats.result == 'success' || needs.fetch-replays.result == 'success')
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Calculate pair synergy
+        run: npx tsx scripts/calculate-pair-synergy.ts
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      
+      - name: Calculate counters
+        run: npx tsx scripts/calculate-counters.ts
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
